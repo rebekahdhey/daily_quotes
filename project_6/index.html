@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="quora.png" type="image/x-icon">
+    <link rel="stylesheet" href="quote.css">
+    <title>Quotations</title>
+</head>
+<body>
+
+    <div class="quote-box">
+        <h2>Quote of the Day</h2>
+        <blockquote id="quote">Loading...</blockquote>
+        <span id="author">Loading...</span>
+        <div>
+            <button id="new-quote" onclick="getquote()">New Quote</button>
+            <button><img src="threads.png" alt="image">Post</button>
+        </div>
+    </div>
+    
+    <script>
+        const quoteElement = document.getElementById("quote");
+        const authorElement = document.getElementById("author");
+        const api_url = "https://api.api-ninjas.com/v1/quotes"; // API Ninjas endpoint for quotes
+        const api_key = "SuD3F4Ihs3gUwAiGSUSyIQ==jiEukqWj8B81fsDg"; // Replace with your actual API Ninjas API key
+    
+        async function getquote() {
+            try {
+                const response = await fetch(api_url, {
+                    headers: {
+                        'X-Api-Key': api_key // Add your API key in the headers
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log(data);
+
+                // Display the quote and author
+                const quote = data[0]; // Access the first quote in the returned array
+                quoteElement.innerHTML = `"${quote.quote}"`; // Set quote in blockquote
+                authorElement.innerHTML = `- ${quote.author || 'Unknown'}`; // Set author in span
+            } catch (error) {
+                console.error('Failed to fetch the quote:', error);
+            }
+        }
+
+        // Fetch a quote on page load
+        getquote();
+
+        // Event listener for the "New Quote" button
+        document.getElementById("new-quote").addEventListener("click", getquote);
+    </script>
+
+</body>
+</html>
